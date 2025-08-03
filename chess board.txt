@@ -1,0 +1,159 @@
+Simple Chess Board Display in Terminal
+Displays a chess board with Unicode chess pieces
+"""
+
+def create_chess_board():
+    """Create and display a chess board in the terminal"""
+    
+    # Unicode chess pieces
+    pieces = {
+        'white': {
+            'pawn': '♙',
+            'rook': '♖', 
+            'knight': '♘',
+            'bishop': '♗',
+            'queen': '♕',
+            'king': '♔'
+        },
+        'black': {
+            'pawn': '♟',
+            'rook': '♜',
+            'knight': '♞', 
+            'bishop': '♝',
+            'queen': '♛',
+            'king': '♚'
+        }
+    }
+    
+    # Initial board setup
+    board = [
+        # Row 0 (Black pieces)
+        [pieces['black']['rook'], pieces['black']['knight'], pieces['black']['bishop'], 
+         pieces['black']['queen'], pieces['black']['king'], pieces['black']['bishop'],
+         pieces['black']['knight'], pieces['black']['rook']],
+        # Row 1 (Black pawns)
+        [pieces['black']['pawn']] * 8,
+        # Rows 2-5 (Empty)
+        [None] * 8,
+        [None] * 8,
+        [None] * 8,
+        [None] * 8,
+        # Row 6 (White pawns)
+        [pieces['white']['pawn']] * 8,
+        # Row 7 (White pieces)
+        [pieces['white']['rook'], pieces['white']['knight'], pieces['white']['bishop'],
+         pieces['white']['queen'], pieces['white']['king'], pieces['white']['bishop'],
+         pieces['white']['knight'], pieces['white']['rook']]
+    ]
+    
+    return board
+
+def display_board(board):
+    """Display the chess board in the terminal"""
+    
+    print("\n" + "="*50)
+    print("           CHESS BOARD")
+    print("="*50)
+    
+    # Column labels (a-h)
+    print("    a   b   c   d   e   f   g   h")
+    print("  +---+---+---+---+---+---+---+---+")
+    
+    for row in range(8):
+        # Row label (8-1)
+        row_label = 8 - row
+        print(f"{row_label} |", end=" ")
+        
+        for col in range(8):
+            piece = board[row][col]
+            if piece is None:
+                # Empty square - alternate colors
+                if (row + col) % 2 == 0:
+                    print("  |", end=" ")  # Light square
+                else:
+                    print("██|", end=" ")  # Dark square
+            else:
+                print(f"{piece} |", end=" ")
+        
+        print(f" {row_label}")
+        
+        if row < 7:  # Don't print line after last row
+            print("  +---+---+---+---+---+---+---+---+")
+    
+    # Bottom border and column labels
+    print("  +---+---+---+---+---+---+---+---+")
+    print("    a   b   c   d   e   f   g   h")
+    print("="*50)
+
+def get_square_name(row, col):
+    """Convert row and column to chess notation (e.g., e4)"""
+    file = chr(97 + col)  # a-h
+    rank = 8 - row        # 1-8
+    return f"{file}{rank}"
+
+def display_piece_info(board):
+    """Display information about pieces on the board"""
+    print("\n📋 PIECE INFORMATION:")
+    print("-" * 30)
+    
+    piece_count = {'white': {}, 'black': {}}
+    
+    for row in range(8):
+        for col in range(8):
+            piece = board[row][col]
+            if piece is not None:
+                # Determine color and type
+                if piece in ['♙', '♖', '♘', '♗', '♕', '♔']:
+                    color = 'white'
+                else:
+                    color = 'black'
+                
+                # Map piece symbol to type
+                piece_map = {
+                    '♙': 'pawn', '♟': 'pawn',
+                    '♖': 'rook', '♜': 'rook', 
+                    '♘': 'knight', '♞': 'knight',
+                    '♗': 'bishop', '♝': 'bishop',
+                    '♕': 'queen', '♛': 'queen',
+                    '♔': 'king', '♚': 'king'
+                }
+                
+                piece_type = piece_map[piece]
+                square = get_square_name(row, col)
+                
+                if piece_type not in piece_count[color]:
+                    piece_count[color][piece_type] = []
+                piece_count[color][piece_type].append(square)
+    
+    # Display piece locations
+    for color in ['white', 'black']:
+        print(f"\n{color.upper()} PIECES:")
+        for piece_type, squares in piece_count[color].items():
+            print(f"  {piece_type.title()}: {', '.join(squares)}")
+
+def main():
+    """Main function to run the chess board display"""
+    print("♔ CHESS BOARD GENERATOR ♛")
+    print("Creating a chess board display...")
+    
+    # Create the board
+    board = create_chess_board()
+    
+    # Display the board
+    display_board(board)
+    
+    # Display piece information
+    display_piece_info(board)
+    
+    print("\n🎯 FEATURES:")
+    print("• Unicode chess pieces")
+    print("• Standard chess notation (a1-h8)")
+    print("• Alternating square colors")
+    print("• Piece location tracking")
+    
+    print("\n♟️  PIECE SYMBOLS:")
+    print("White: ♙♖♘♗♕♔ (Pawn, Rook, Knight, Bishop, Queen, King)")
+    print("Black: ♟♜♞♝♛♚ (Pawn, Rook, Knight, Bishop, Queen, King)")
+
+if __name__ == "__main__":
+    main() 
